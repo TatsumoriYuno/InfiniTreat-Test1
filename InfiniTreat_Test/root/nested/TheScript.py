@@ -23,9 +23,9 @@ def precise_delay(delay_amount):
     while round((perf_counter() - prv_t) * 1000) / 1000 - 0.001 <= delay_amount:
         pass
 
-print("Press 'z' to start program.")
-print("Once started press 'q' to quit.")
-keyboard.wait('z')
+print("Press 's' to start program.")
+print("Once started press 'q' to quit and 'z' to loop.")
+keyboard.wait('s')
 pyautogui.press('x')
 
 
@@ -33,42 +33,47 @@ sct = mss.mss()
 zero_txt = cv2.imread("TERNOW.PNG")
 
 dimensions_counter = {'left': 850, 'top': 25, 'width': 250, 'height': 250}
-#dimensions_counter = {'left': 1100, 'top': 25, 'width': 250, 'height': 250}
 
 
 
 while True:
-    scr = numpy.array(sct.grab(dimensions_counter))
-    scr_remove = scr[:,:,:3]
+    while True:
+        scr = numpy.array(sct.grab(dimensions_counter))
+        scr_remove = scr[:,:,:3]
 
-    result = cv2.matchTemplate(scr_remove, zero_txt, cv2.TM_CCOEFF_NORMED)
-    
-    _, max_val, _, max_loc = cv2.minMaxLoc(result)
-    #src = scr.copy()
-    if max_val > .79:
-        pyautogui.moveTo(x=900, y=152)
-        pyautogui.click(button='left')
-        precise_delay(.5)
-        pyautogui.press('i')
-        precise_delay(1.2)
-        pyautogui.moveTo(x=803, y=789)
-        pyautogui.click(button='left')
-        precise_delay(.5)
-        pyautogui.moveTo(x=700, y=712)
-        pyautogui.click(button='left')
-        precise_delay(7.35)
-        pyautogui.moveTo(x=1221, y=792)
-        pyautogui.click(button='left')
-        precise_delay(3)
-        pyautogui.keyDown('s')
-        precise_delay(6.4)
-        pyautogui.keyUp('s')
-        pyautogui.press('x')
-        max_val = 0
+        result = cv2.matchTemplate(scr_remove, zero_txt, cv2.TM_CCOEFF_NORMED)
         
-    cv2.imshow('P101 Timer', scr)
-    cv2.waitKey(1)
+        _, max_val, _, max_loc = cv2.minMaxLoc(result)
+        #src = scr.copy()
+        if max_val > .79:
+            pyautogui.moveTo(x=900, y=152)
+            pyautogui.click(button='left')
+            precise_delay(.5)
+            pyautogui.press('i')
+            precise_delay(1.2)
+            pyautogui.moveTo(x=803, y=789)
+            pyautogui.click(button='left')
+            precise_delay(.5)
+            pyautogui.moveTo(x=700, y=712)
+            pyautogui.click(button='left')
+            precise_delay(7.35)
+            pyautogui.moveTo(x=1221, y=792)
+            pyautogui.click(button='left')
+            precise_delay(3)
+            pyautogui.keyDown('s')
+            precise_delay(6.4)
+            pyautogui.keyUp('s')
+            pyautogui.press('x')
+            max_val = 0
+        
+        cv2.imshow('P101 Timer', scr)
+        cv2.waitKey(1)
     
+        if keyboard.is_pressed('z'):
+            pyautogui.press('x')
+            break
+        if keyboard.is_pressed('q'):
+            break
     if keyboard.is_pressed('q'):
         break
 print("Program closed with 'q' key.")
